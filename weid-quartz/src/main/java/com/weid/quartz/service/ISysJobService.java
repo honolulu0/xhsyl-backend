@@ -77,12 +77,28 @@ public interface ISysJobService
     public boolean run(SysJob job) throws SchedulerException;
 
     /**
+     * 立即运行任务
+     *
+     * @param job 调度信息
+     * @return 结果
+     */
+    public boolean runjob(SysJob job) throws SchedulerException;
+
+    /**
      * 新增任务
      * 
      * @param job 调度信息
      * @return 结果
      */
     public int insertJob(SysJob job) throws SchedulerException, TaskException;
+
+    /**
+     * 新增任务
+     *
+     * @param job 调度信息
+     * @return 结果
+     */
+    public SysJob insertDoJob(SysJob job) throws SchedulerException, TaskException;
 
     /**
      * 更新任务

@@ -9,37 +9,22 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>weid-quartz</artifactId>
+    <artifactId>weid-xhsyl</artifactId>
 
     <description>
-        quartz定时任务
+        小红书引流模块
     </description>
-
     <dependencies>
-
-        <!-- 定时任务 -->
+        <!-- collections工具类 -->
         <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.mchange</groupId>
-                    <artifactId>c3p0</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
         </dependency>
-
-        <!-- 通用工具-->
         <dependency>
             <groupId>com.weid</groupId>
             <artifactId>weid-common</artifactId>
         </dependency>
-        <dependency>
-            <groupId>net.snowflake</groupId>
-            <artifactId>snowflake-jdbc</artifactId>
-            <version>3.13.4</version>
-        </dependency>
-
     </dependencies>
+
 
 </project>

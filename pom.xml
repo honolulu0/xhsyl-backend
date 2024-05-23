@@ -171,6 +171,14 @@
             </dependency>
 
 
+            <!-- 小红书引流-->
+            <dependency>
+                <groupId>com.weid</groupId>
+                <artifactId>weid-xhsyl</artifactId>
+                <version>${weid.version}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 

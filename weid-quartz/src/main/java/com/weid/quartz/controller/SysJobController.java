@@ -109,6 +109,17 @@ public class SysJobController extends BaseController
         job.setCreateBy(getUsername());
         return toAjax(jobService.insertJob(job));
     }
+    /**
+     * 新增一次性立即执行任务
+     */
+    @PreAuthorize("@ss.hasPermi('monitor:job:add')")
+    @Log(title = "定时任务", businessType = BusinessType.INSERT)
+    @PostMapping("/addDoJob")
+    public AjaxResult addDoJob(@RequestBody SysJob job) throws SchedulerException, TaskException
+    {
+        job.setCreateBy(getUsername());
+        return success(jobService.insertDoJob(job));
+    }
 
     /**
      * 修改定时任务
@@ -170,6 +181,21 @@ public class SysJobController extends BaseController
         boolean result = jobService.run(job);
         return result ? success() : error("任务不存在或已过期！");
     }
+
+
+
+    /**
+     * 立即执行一次任务
+     */
+    @PreAuthorize("@ss.hasPermi('monitor:job:changeStatus')")
+    @Log(title = "定时任务", businessType = BusinessType.UPDATE)
+    @PutMapping("/runjob")
+    public AjaxResult runjob(@RequestBody SysJob job) throws SchedulerException
+    {
+        boolean result = jobService.runjob(job);
+        return result ? success() : error("任务不存在或已过期！");
+    }
+
 
     /**
      * 删除定时任务
