@@ -16,10 +16,10 @@ import java.util.List;
 public class XhsylTask {
 
 
-    public void collectingNotes(Integer keyword_id, String keyword, Integer all_page) {
+    public void collectingNotes(Integer keyword_id, String keyword, Integer all_page, String xhs_search_sort) {
 //        {"keyword_id":3,"keyword":"穿搭","all_page":3}
-        System.out.println(StringUtils.format("执行多参方法： keyword_id, keyword, all_page", keyword_id, keyword, all_page));
-        XhsylApi.collectingNotes(keyword_id, keyword, all_page);
+        System.out.println(StringUtils.format("执行多参方法： keyword_id, keyword, all_page,xhs_search_sort", keyword_id, keyword, all_page, xhs_search_sort));
+        XhsylApi.collectingNotes(keyword_id, keyword, all_page, xhs_search_sort);
     }
 
     public void collectingComment(String noteIds) {

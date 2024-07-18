@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weid.note.mapper.NoteKeywordMapper">
+    
+    <resultMap type="NoteKeyword" id="NoteKeywordResult">
+        <result property="id"    column="id"    />
+        <result property="keyword"    column="keyword"    />
+        <result property="allPage"    column="all_page"    />
+        <result property="creatTime"    column="creat_time"    />
+        <result property="lastUseTime"    column="last_use_time"    />
+        <result property="tag"    column="tag"    />
+    </resultMap>
+
+    <sql id="selectNoteKeywordVo">
+        select id, keyword, all_page, creat_time, last_use_time, tag from note_keyword
+    </sql>
+
+    <select id="selectNoteKeywordList" parameterType="NoteKeyword" resultMap="NoteKeywordResult">
+        <include refid="selectNoteKeywordVo"/>
+        <where>  
+            <if test="keyword != null  and keyword != ''"> and keyword like concat('%', #{keyword}, '%')</if>
+            <if test="tag != null  and tag != ''"> and tag like concat('%', #{tag}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectNoteKeywordById" parameterType="Long" resultMap="NoteKeywordResult">
+        <include refid="selectNoteKeywordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNoteKeyword" parameterType="NoteKeyword" useGeneratedKeys="true" keyProperty="id">
+        insert into note_keyword
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="keyword != null">keyword,</if>
+            <if test="allPage != null">all_page,</if>
+            <if test="creatTime != null">creat_time,</if>
+            <if test="lastUseTime != null">last_use_time,</if>
+            <if test="tag != null">tag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="keyword != null">#{keyword},</if>
+            <if test="allPage != null">#{allPage},</if>
+            <if test="creatTime != null">#{creatTime},</if>
+            <if test="lastUseTime != null">#{lastUseTime},</if>
+            <if test="tag != null">#{tag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNoteKeyword" parameterType="NoteKeyword">
+        update note_keyword
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="keyword != null">keyword = #{keyword},</if>
+            <if test="allPage != null">all_page = #{allPage},</if>
+            <if test="creatTime != null">creat_time = #{creatTime},</if>
+            <if test="lastUseTime != null">last_use_time = #{lastUseTime},</if>
+            <if test="tag != null">tag = #{tag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNoteKeywordById" parameterType="Long">
+        delete from note_keyword where id = #{id}
+    </delete>
+
+    <delete id="deleteNoteKeywordByIds" parameterType="String">
+        delete from note_keyword where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

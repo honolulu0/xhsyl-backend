@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weid.note.mapper.NoteModelMapper">
+    
+    <resultMap type="NoteModel" id="NoteModelResult">
+        <result property="id"    column="id"    />
+        <result property="keywordId"    column="keyword_id"    />
+        <result property="keyword"    column="keyword"    />
+        <result property="modelType"    column="model_type"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="mediaResources"    column="media_resources"    />
+        <result property="ats"    column="ats"    />
+        <result property="topics"    column="topics"    />
+        <result property="creatTime"    column="creat_time"    />
+        <result property="lastUseTime"    column="last_use_time"    />
+    </resultMap>
+
+    <sql id="selectNoteModelVo">
+        select id, keyword_id, keyword, model_type, title, content, media_resources, ats, topics, creat_time, last_use_time from note_model
+    </sql>
+
+    <select id="selectNoteModelList" parameterType="NoteModel" resultMap="NoteModelResult">
+        <include refid="selectNoteModelVo"/>
+        <where>  
+            <if test="keywordId != null "> and keyword_id = #{keywordId}</if>
+            <if test="keyword != null  and keyword != ''"> and keyword = #{keyword}</if>
+            <if test="modelType != null  and modelType != ''"> and model_type = #{modelType}</if>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+            <if test="mediaResources != null  and mediaResources != ''"> and media_resources like concat('%', #{mediaResources}, '%')</if>
+            <if test="ats != null  and ats != ''"> and ats like concat('%', #{ats}, '%')</if>
+            <if test="topics != null  and topics != ''"> and topics like concat('%', #{topics}, '%')</if>
+            <if test="params.beginCreatTime != null and params.beginCreatTime != '' and params.endCreatTime != null and params.endCreatTime != ''"> and creat_time between #{params.beginCreatTime} and #{params.endCreatTime}</if>
+            <if test="params.beginLastUseTime != null and params.beginLastUseTime != '' and params.endLastUseTime != null and params.endLastUseTime != ''"> and last_use_time between #{params.beginLastUseTime} and #{params.endLastUseTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectNoteModelById" parameterType="Long" resultMap="NoteModelResult">
+        <include refid="selectNoteModelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNoteModel" parameterType="NoteModel" useGeneratedKeys="true" keyProperty="id">
+        insert into note_model
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="keywordId != null">keyword_id,</if>
+            <if test="keyword != null">keyword,</if>
+            <if test="modelType != null and modelType != ''">model_type,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="mediaResources != null and mediaResources != ''">media_resources,</if>
+            <if test="ats != null and ats != ''">ats,</if>
+            <if test="topics != null and topics != ''">topics,</if>
+            <if test="creatTime != null">creat_time,</if>
+            <if test="lastUseTime != null">last_use_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="keywordId != null">#{keywordId},</if>
+            <if test="keyword != null">#{keyword},</if>
+            <if test="modelType != null and modelType != ''">#{modelType},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="mediaResources != null and mediaResources != ''">#{mediaResources},</if>
+            <if test="ats != null and ats != ''">#{ats},</if>
+            <if test="topics != null and topics != ''">#{topics},</if>
+            <if test="creatTime != null">#{creatTime},</if>
+            <if test="lastUseTime != null">#{lastUseTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNoteModel" parameterType="NoteModel">
+        update note_model
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="keywordId != null">keyword_id = #{keywordId},</if>
+            <if test="keyword != null">keyword = #{keyword},</if>
+            <if test="modelType != null and modelType != ''">model_type = #{modelType},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="mediaResources != null and mediaResources != ''">media_resources = #{mediaResources},</if>
+            <if test="ats != null and ats != ''">ats = #{ats},</if>
+            <if test="topics != null and topics != ''">topics = #{topics},</if>
+            <if test="creatTime != null">creat_time = #{creatTime},</if>
+            <if test="lastUseTime != null">last_use_time = #{lastUseTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNoteModelById" parameterType="Long">
+        delete from note_model where id = #{id}
+    </delete>
+
+    <delete id="deleteNoteModelByIds" parameterType="String">
+        delete from note_model where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

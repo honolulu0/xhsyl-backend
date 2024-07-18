@@ -14,7 +14,7 @@ public class XhsylApi {
     public static final String XHSHOST = "127.0.0.1";
     public static final String POST = "10087";
 
-    public static void collectingNotes(Integer keyword_id, String keyword, Integer all_page) {
+    public static void collectingNotes(Integer keyword_id, String keyword, Integer all_page, String xhs_search_sort) {
         try {
             // 创建URL对象
             URL url = new URL("http://" + XHSHOST + ":" + POST + "/note_data/get_notes");
@@ -29,7 +29,7 @@ public class XhsylApi {
             connection.setRequestProperty("Content-Type", "application/json");
 
             // 设置请求体
-            NoteRequest request = new NoteRequest(keyword_id, keyword, all_page);
+            NoteRequest request = new NoteRequest(keyword_id, keyword, all_page, xhs_search_sort);
             Gson gson = new Gson();
             String requestBody = gson.toJson(request);
 

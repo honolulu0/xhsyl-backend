@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weid.note.mapper.NoteCommentMapper">
+    
+    <resultMap type="NoteComment" id="NoteCommentResult">
+        <result property="id"    column="id"    />
+        <result property="noteId"    column="note_id"    />
+        <result property="commentId"    column="comment_id"    />
+        <result property="comment"    column="comment"    />
+        <result property="likeCount"    column="like_count"    />
+        <result property="subCommentCount"    column="sub_comment_count"    />
+        <result property="ipLocation"    column="ip_location"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="userId"    column="user_id"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="image"    column="image"    />
+        <result property="targetCommentId"    column="target_comment_id"    />
+        <result property="lastUseTime"    column="last_use_time"    />
+        <result property="reviewStatus"    column="review_status"    />
+    </resultMap>
+
+
+    <sql id="selectNoteCommentVo">
+        select id, note_id, comment_id, comment, like_count, sub_comment_count, ip_location, create_time, user_id, nickname, image, target_comment_id, last_use_time, review_status from note_comment
+    </sql>
+
+
+
+    <resultMap type="NoteComment" id="NoteAndCommentResult">
+        <!-- NoteComment properties -->
+        <result property="id" column="nc_id"/>
+        <result property="commentId" column="nc_comment_id"/>
+        <result property="comment" column="nc_comment"/>
+        <result property="likeCount" column="nc_like_count"/>
+        <result property="subCommentCount" column="nc_sub_comment_count"/>
+        <result property="ipLocation" column="nc_ip_location"/>
+        <result property="createTime" column="nc_create_time"/>
+        <result property="userId" column="nc_user_id"/>
+        <result property="nickname" column="nc_nickname"/>
+        <result property="image" column="nc_image"/>
+        <result property="targetCommentId" column="nc_target_comment_id"/>
+        <result property="lastUseTime" column="nc_last_use_time"/>
+        <result property="reviewStatus" column="nc_review_status"/>
+
+        <!-- Note properties -->
+        <result property="keywordId" column="n_keyword_id"/>
+        <result property="keyword" column="n_keyword"/>
+        <result property="noteId" column="n_note_id"/>
+        <result property="title" column="n_title"/>
+    </resultMap>
+
+    <select id="selectNoteCommentList" parameterType="NoteComment" resultMap="NoteAndCommentResult">
+        select
+        nc.id as nc_id, nc.comment_id as nc_comment_id, nc.comment as nc_comment, nc.like_count as nc_like_count,
+        nc.sub_comment_count as nc_sub_comment_count, nc.ip_location as nc_ip_location, nc.create_time as nc_create_time,
+        nc.user_id as nc_user_id, nc.nickname as nc_nickname, nc.image as nc_image, nc.target_comment_id as nc_target_comment_id,
+        nc.last_use_time as nc_last_use_time, nc.review_status as nc_review_status,
+        n.keyword_id as n_keyword_id, n.keyword as n_keyword, n.note_id as n_note_id, n.title as n_title
+        from
+        note_comment nc
+        join
+        note n on nc.note_id = n.note_id
+        <where>
+            <!-- note_comment 表的筛选条件 -->
+            <if test="commentId != null and commentId != ''"> and nc.comment_id = #{commentId}</if>
+            <if test="comment != null and comment != ''"> and nc.comment like concat('%', #{comment}, '%')</if>
+            <if test="likeCount != null and likeCount != ''"> and nc.like_count = #{likeCount}</if>
+            <if test="subCommentCount != null and subCommentCount != ''"> and nc.sub_comment_count = #{subCommentCount}</if>
+            <if test="ipLocation != null and ipLocation != ''"> and nc.ip_location = #{ipLocation}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and nc.create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="userId != null and userId != ''"> and nc.user_id = #{userId}</if>
+            <if test="nickname != null and nickname != ''"> and nc.nickname like concat('%', #{nickname}, '%')</if>
+            <if test="image != null and image != ''"> and nc.image = #{image}</if>
+            <if test="targetCommentId != null and targetCommentId != ''"> and nc.target_comment_id = #{targetCommentId}</if>
+            <if test="params.beginLastUseTime != null and params.beginLastUseTime != '' and params.endLastUseTime != null and params.endLastUseTime != ''"> and nc.last_use_time between #{params.beginLastUseTime} and #{params.endLastUseTime}</if>
+            <if test="reviewStatus != null and reviewStatus != ''"> and nc.review_status = #{reviewStatus}</if>
+
+            <!-- note 表的筛选条件 -->
+            <if test="keywordId != null and keywordId != ''"> and n.keyword_id = #{keywordId}</if>
+            <if test="keyword != null and keyword != ''"> and n.keyword like concat('%', #{keyword}, '%')</if>
+            <if test="noteId != null and noteId != ''"> and n.note_id = #{noteId}</if>
+            <if test="title != null and title != ''"> and n.title like concat('%', #{title}, '%')</if>
+        </where>
+    </select>
+
+
+    <select id="selectNoteCommentById" parameterType="Long" resultMap="NoteCommentResult">
+        <include refid="selectNoteCommentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNoteComment" parameterType="NoteComment" useGeneratedKeys="true" keyProperty="id">
+        insert into note_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="noteId != null">note_id,</if>
+            <if test="commentId != null">comment_id,</if>
+            <if test="comment != null">comment,</if>
+            <if test="likeCount != null">like_count,</if>
+            <if test="subCommentCount != null">sub_comment_count,</if>
+            <if test="ipLocation != null">ip_location,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="image != null">image,</if>
+            <if test="targetCommentId != null">target_comment_id,</if>
+            <if test="lastUseTime != null">last_use_time,</if>
+            <if test="reviewStatus != null">review_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="noteId != null">#{noteId},</if>
+            <if test="commentId != null">#{commentId},</if>
+            <if test="comment != null">#{comment},</if>
+            <if test="likeCount != null">#{likeCount},</if>
+            <if test="subCommentCount != null">#{subCommentCount},</if>
+            <if test="ipLocation != null">#{ipLocation},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="nickname != null">#{nickname},</if>
+            <if test="image != null">#{image},</if>
+            <if test="targetCommentId != null">#{targetCommentId},</if>
+            <if test="lastUseTime != null">#{lastUseTime},</if>
+            <if test="reviewStatus != null">#{reviewStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNoteComment" parameterType="NoteComment">
+        update note_comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="noteId != null">note_id = #{noteId},</if>
+            <if test="commentId != null">comment_id = #{commentId},</if>
+            <if test="comment != null">comment = #{comment},</if>
+            <if test="likeCount != null">like_count = #{likeCount},</if>
+            <if test="subCommentCount != null">sub_comment_count = #{subCommentCount},</if>
+            <if test="ipLocation != null">ip_location = #{ipLocation},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="targetCommentId != null">target_comment_id = #{targetCommentId},</if>
+            <if test="lastUseTime != null">last_use_time = #{lastUseTime},</if>
+            <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNoteCommentById" parameterType="Long">
+        delete from note_comment where id = #{id}
+    </delete>
+
+    <delete id="deleteNoteCommentByIds" parameterType="String">
+        delete from note_comment where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteNoteCommentByUserId" parameterType="String">
+        delete from note_comment where user_id = #{userId}
+    </delete>
+</mapper>
